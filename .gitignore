@@ -1,0 +1,10 @@
+#chaves ssh
+.ssh/
+id_ed25519
+id_ed25529.pub
+known_hosts
+
+#cache python
+__pycache__/
+*.log
+.env
