@@ -14,8 +14,8 @@ class Style:
     BRIGHT = "\033[1m"
     RESET_ALL = "\033[0m"
 
-IP = "192.168.100.238"
-USER = "mint"
+IP = "SEU_IP"
+USER = "NOME_DO_USUARIO"
 
 def nec(comando):
     os.system(
