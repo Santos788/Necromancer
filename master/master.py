@@ -36,7 +36,8 @@ def nec(comando):
     try:
         cliente.connect((IP, PORT))
     except ConnectionRefusedError:
-        print("Zumbie offline ou zombie.py não está rodando.")
+        print(C_WARN + "🧟 Zumbie offline ou zombie.py não está rodando." + Style.RESET_ALL)
+        return 
     cliente.send(comando.encode())
 
     resposta = cliente.recv(4096).decode()
@@ -151,20 +152,21 @@ def run(opcao):
     return True
 
 def main():
+    os.system("clear")
+    print_banner()
+
     if verificar_zumbi():
         print(C_OK + "ZUMBI ONLINE" + Style.RESET_ALL)
 
     else:
         print(C_WARN + "ZUMBI OFFLINE" + Style.RESET_ALL)
 
-    os.system("clear")
-    print_banner()
     while True:
-        print_menu()
-        opcao = input(C_PROMPT + "\n[$] Escolha: " + Style.RESET_ALL)
-        if not run(opcao):
-            break
-        print()
+            print_menu()
+            opcao = input(C_PROMPT + "\n[$] Escolha: " + Style.RESET_ALL)
+            if not run(opcao):
+                break
+            print()
 
 if __name__ == "__main__":
     main()
