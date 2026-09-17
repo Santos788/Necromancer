@@ -1,5 +1,6 @@
-import os
 import shutil
+import socket
+import os
 
 # Códigos ANSI puros — o Termux já suporta nativamente, sem precisar de libs extras
 class Fore:
@@ -14,14 +15,35 @@ class Style:
     BRIGHT = "\033[1m"
     RESET_ALL = "\033[0m"
 
-IP = "SEU_IP"
-USER = "NOME_DO_USUARIO"
+import socket
 
-def nec(comando):
-    os.system(
-        f"ssh {USER}@{IP} 'python3 ~/projeto/necromancer/zombie/zombie.py {comando}'"
-    )
+IP = "192.168.100.238"
+PORT = 5050
+
+def verificar_zumbi():
+
+    try:
+        cliente = socket.socket()
+        cliente.settimeout(2)
+        cliente.connect((IP, PORT))
+        cliente.close()
+        return True
+    except:
+        return False
     
+def nec(comando):
+    cliente = socket.socket()
+    try:
+        cliente.connect((IP, PORT))
+    except ConnectionRefusedError:
+        print("Zumbie offline ou zombie.py não está rodando.")
+    cliente.send(comando.encode())
+
+    resposta = cliente.recv(4096).decode()
+    print("\n🧟 Resposta do Zumbi:")
+    print(resposta)
+
+    cliente.close()
 
 C_TITLE = Fore.LIGHTBLUE_EX + Style.BRIGHT
 C_BORDER = Fore.BLUE
@@ -129,6 +151,12 @@ def run(opcao):
     return True
 
 def main():
+    if verificar_zumbi():
+        print(C_OK + "ZUMBI ONLINE" + Style.RESET_ALL)
+
+    else:
+        print(C_WARN + "ZUMBI OFFLINE" + Style.RESET_ALL)
+
     os.system("clear")
     print_banner()
     while True:

