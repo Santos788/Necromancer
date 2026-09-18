@@ -17,8 +17,8 @@ class Style:
 
 import socket
 
-IP = "192.168.100.238"
-PORT = 5050
+IP = "SEU_IP"
+PORT = "SUA_PORT"
 
 def verificar_zumbi():
 
